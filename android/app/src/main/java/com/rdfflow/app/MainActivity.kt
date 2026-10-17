@@ -3,9 +3,13 @@ package com.rdfflow.app
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -13,6 +17,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.webkit.WebViewAssetLoader
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +28,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Set native window background to midnight-slate (#090D16) immediately
+        window.decorView.setBackgroundColor(Color.parseColor("#090D16"))
+
         webView = WebView(this)
+        webView.setBackgroundColor(Color.parseColor("#090D16"))
         setContentView(webView)
 
         checkPermissions()
@@ -61,15 +70,37 @@ class MainActivity : AppCompatActivity() {
         settings.allowContentAccess = true
         settings.mediaPlaybackRequiresUserGesture = false
 
-        webView.webViewClient = WebViewClient()
+        // Configure Google's official WebViewAssetLoader for secure virtual origin
+        val assetLoader = WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .build()
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldInterceptRequest(
+                view: WebView,
+                request: WebResourceRequest
+            ): WebResourceResponse? {
+                return assetLoader.shouldInterceptRequest(request.url)
+            }
+
+            @Deprecated("Deprecated in Java")
+            override fun shouldInterceptRequest(
+                view: WebView,
+                url: String
+            ): WebResourceResponse? {
+                return assetLoader.shouldInterceptRequest(Uri.parse(url))
+            }
+        }
+
         webView.webChromeClient = object : WebChromeClient() {
             override fun onPermissionRequest(request: PermissionRequest) {
-                // Automatically grant audio capture permission to our app's WebView
+                // Grant audio capture permission to our app's WebView
                 request.grant(request.resources)
             }
         }
 
-        webView.loadUrl("file:///android_asset/dist/index.html")
+        // Load through the secure virtual domain (solves CORS and ES module restrictions)
+        webView.loadUrl("https://appassets.androidplatform.net/assets/dist/index.html")
     }
 
     override fun onRequestPermissionsResult(

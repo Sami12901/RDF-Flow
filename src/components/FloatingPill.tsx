@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mic, Check, Sparkles, AlertCircle, Settings, History, Volume2 } from 'lucide-react';
+import { Mic, Check, Sparkles, AlertCircle, Settings, History, Volume2, VolumeX, Maximize2, Globe } from 'lucide-react';
 import { DictationState, ToneMode, STTProvider } from '../types';
 
 interface FloatingPillProps {
@@ -8,10 +8,14 @@ interface FloatingPillProps {
   activeMode: ToneMode;
   provider: STTProvider;
   currentText: string;
+  soundEnabled?: boolean;
+  language?: string;
   onToggleRecord: () => void;
   onCycleMode: () => void;
   onOpenSettings: () => void;
   onOpenHistory: () => void;
+  onExpandToStudio?: () => void;
+  onToggleSound?: () => void;
 }
 
 export const FloatingPill: React.FC<FloatingPillProps> = ({
@@ -20,10 +24,14 @@ export const FloatingPill: React.FC<FloatingPillProps> = ({
   activeMode,
   provider,
   currentText,
+  soundEnabled = true,
+  language = 'auto',
   onToggleRecord,
   onCycleMode,
   onOpenSettings,
   onOpenHistory,
+  onExpandToStudio,
+  onToggleSound,
 }) => {
   // Animated bar heights simulation when listening
   const [bars, setBars] = useState<number[]>([15, 30, 60, 45, 25, 12]);
@@ -52,6 +60,7 @@ export const FloatingPill: React.FC<FloatingPillProps> = ({
     professional: 'text-cyan-400 border-cyan-500/40 bg-cyan-950/30',
     code: 'text-amber-400 border-amber-500/40 bg-amber-950/30',
     bullets: 'text-purple-400 border-purple-500/40 bg-purple-950/30',
+    academic: 'text-indigo-400 border-indigo-500/40 bg-indigo-950/30',
     raw: 'text-slate-400 border-slate-500/40 bg-slate-900/30',
   };
 
@@ -140,13 +149,41 @@ export const FloatingPill: React.FC<FloatingPillProps> = ({
           {activeMode}
         </button>
 
-        {/* Provider Tag */}
-        <div className="text-[9px] font-mono text-slate-500 uppercase px-1 border-l border-slate-700/80">
-          {provider}
+        {/* Language & Provider Tags */}
+        <div className="flex items-center gap-1.5 text-[9px] font-mono text-slate-500 uppercase px-1 border-l border-slate-700/80">
+          {language !== 'auto' && (
+            <span className="flex items-center gap-0.5 text-cyan-400 font-bold bg-cyan-950/40 px-1 py-0.5 rounded border border-cyan-800/40">
+              <Globe className="w-2.5 h-2.5" />
+              {language}
+            </span>
+          )}
+          <span>{provider}</span>
         </div>
 
-        {/* Quick Menu Icons (Settings & History) */}
+        {/* Quick Menu Icons (Sound, Studio, History, Settings) */}
         <div className="flex items-center gap-1 pl-1 border-l border-slate-700/80">
+          {onToggleSound && (
+            <button
+              onClick={onToggleSound}
+              className={`p-1 rounded-lg transition-colors ${
+                soundEnabled ? 'text-cyan-400 hover:text-cyan-300' : 'text-slate-500 hover:text-slate-400'
+              }`}
+              title={soundEnabled ? 'Sound Chimes On (Click to Mute)' : 'Sound Chimes Muted (Click to Enable)'}
+            >
+              {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+            </button>
+          )}
+
+          {onExpandToStudio && (
+            <button
+              onClick={onExpandToStudio}
+              className="p-1 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-slate-800/80 transition-colors"
+              title="Expand to Full Studio Workspace (F9 / Ctrl+M)"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+            </button>
+          )}
+
           <button
             onClick={onOpenHistory}
             className="p-1 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors"
