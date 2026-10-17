@@ -20,6 +20,13 @@ test_output/
 *.swp
 *.swo
 
+# Android build artifacts
+android/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+.gradle/
+
 # OS files
 Thumbs.db
 .DS_Store
