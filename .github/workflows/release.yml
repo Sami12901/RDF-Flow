@@ -147,22 +147,15 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Setup Android Environment
+        run: |
+          echo "ANDROID_HOME=${ANDROID_HOME:-/usr/local/lib/android/sdk}" >> $GITHUB_ENV
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-
-      - name: Setup Rust & Android Targets
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-linux-android, armv7-linux-androideabi, x86_64-linux-android
-
-      - name: Install cargo-ndk
-        run: cargo install cargo-ndk
 
       - name: Setup Python
         uses: actions/setup-python@v5
