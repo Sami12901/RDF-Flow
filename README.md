@@ -4,22 +4,35 @@
 
 <p align="center">
   <strong>Next-Generation AI Voice-to-Text Everywhere You Type</strong><br>
-  <em>Supercharged, open-source alternative to Wispr Flow with sub-250ms hybrid transcription, contextual AI rewriting, and universal desktop integration.</em>
+  <em>Supercharged, open-source alternative to Wispr Flow with sub-250ms hybrid transcription, contextual AI rewriting, and universal desktop &amp; mobile cross-platform support.</em>
 </p>
 
 <p align="center">
-  <a href="https://github.com/saiful/rdf-flow/releases"><img src="https://img.shields.io/badge/release-v0.1.0-00F2FE?style=for-the-badge&logo=github" alt="Release" /></a>
+  <a href="https://github.com/Sami12901/RDF-Flow/releases/latest"><img src="https://img.shields.io/badge/release-v0.1.0-00F2FE?style=for-the-badge&logo=github" alt="Release" /></a>
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT-7F00FF?style=for-the-badge" alt="License" /></a>
-  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-4FACFE?style=for-the-badge&logo=windows&logoColor=white" alt="Platforms" />
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Android%20%7C%20iOS-4FACFE?style=for-the-badge&logo=windows&logoColor=white" alt="Platforms" />
   <img src="https://img.shields.io/badge/latency-Sub--250ms-38EF7D?style=for-the-badge&logo=speedtest&logoColor=white" alt="Speed" />
   <img src="https://img.shields.io/badge/built%20with-Tauri%20v2%20%2B%20Rust-FFC107?style=for-the-badge&logo=tauri&logoColor=black" alt="Tauri v2" />
 </p>
 
 ---
 
+## 📥 Direct Downloads & Releases
+
+Get the latest production binaries for your device directly from [GitHub Releases](https://github.com/Sami12901/RDF-Flow/releases/latest):
+
+| Platform | Package Format | Download Link | Notes |
+| :--- | :---: | :---: | :--- |
+| 🪟 **Windows** | `.msi` / `.exe` | [Download Windows Installer](https://github.com/Sami12901/RDF-Flow/releases/latest) | Windows 10 & 11 (64-bit) with system tray & global hotkeys |
+| 🍏 **macOS** | `.dmg` (Universal) | [Download macOS DMG](https://github.com/Sami12901/RDF-Flow/releases/latest) | Apple Silicon (M1/M2/M3) & Intel Macs |
+| 🤖 **Android** | `.apk` (Direct) | [Download Android APK](https://github.com/Sami12901/RDF-Flow/releases/latest) | Android 8.0+ standalone installation package |
+| 📱 **iOS** | `.zip` (Xcode Archive) | [Download iOS Archive](https://github.com/Sami12901/RDF-Flow/releases/latest) | Sideloadable via AltStore / Xcode developer account |
+
+---
+
 ## 🌟 Overview
 
-**RDF Flow** is a high-performance cross-platform AI voice-to-text dictation client built with **Tauri v2**, **Rust**, and **React**. Inspired by the fluid desktop workflow of Wispr Flow, RDF Flow upgrades the voice dictation experience with multi-provider speech routing, local offline privacy mode, contextual AI tone polishing, and direct active-cursor text injection into any desktop application (IDE, browser, Notion, Slack, Word, and terminal).
+**RDF Flow** is a high-performance cross-platform AI voice-to-text dictation client built with **Tauri v2**, **Rust**, and **React**. Inspired by the fluid desktop workflow of Wispr Flow, RDF Flow upgrades the voice dictation experience with multi-provider speech routing, local offline privacy mode, contextual AI tone polishing, and direct active-cursor text injection into any application (IDE, browser, Notion, Slack, Word, and terminal).
 
 <p align="center">
   <img src="assets/logo.svg" alt="RDF Flow Logo" width="480px" />
@@ -38,7 +51,7 @@
 | **Local Privacy Mode** | ❌ Cloud Only | 🔒 **100% Offline Local Inference Supported** |
 | **Tone & Style Presets** | Limited | 🎭 **5 Modes: Casual, Professional, Code, Bullets, Raw** |
 | **Desktop Architecture** | Heavy Electron | 🚀 **Tauri v2 + Rust (<15MB RAM, ultra-light)** |
-| **Cross-Platform** | Mac / iOS / Android | 💻 **Windows, macOS, Linux (with mobile companion path)** |
+| **Multi-Platform Support** | Partial desktop/mobile | 💻📱 **Windows, macOS, Linux, Android (APK), iOS** |
 | **Active Window Injection** | ✅ Yes | ✅ **Yes (Instant simulated typing / clipboard injection)** |
 | **Custom Prompts & Vocab** | Partial | ✅ **Full User-Customizable Prompts & Keybinds** |
 
@@ -87,8 +100,8 @@ flowchart TD
         LOC["Offline Local Whisper (Privacy)"]
     end
 
-    subgraph OS ["Target Application"]
-        APP["Cursor in Active App (Slack / VS Code / Browser / Word)"]
+    subgraph Target ["Target Applications (Active Cursor)"]
+        APP["Slack • VS Code • Chrome • Word • Notion • Terminal"]
     end
 
     FP --> AUD
@@ -142,8 +155,8 @@ python scripts/generate_icons.py
 ### 2. Installation & Setup
 ```bash
 # Clone the repository
-git clone https://github.com/saiful/rdf-flow.git
-cd rdf-flow
+git clone https://github.com/Sami12901/RDF-Flow.git
+cd RDF-Flow
 
 # Install frontend dependencies
 npm install
@@ -177,23 +190,6 @@ RDF Flow includes a standalone synthetic audio test suite that generates synthet
 python scripts/synthetic_audio_test.py
 ```
 
-**Verification output:**
-```text
-Generated synthetic speech WAV: test_output/synthetic_speech_sample.wav (48044 bytes, 1.5s @ 16000Hz)
-Synthetic audio file format and header verified 100% OK.
-
---- Testing AI Polishing Algorithms ---
-[Casual Mode] Input: 'um hey team uh we should test the new RDF Flow release' -> Output: 'Hey team we should test the new RDF Flow release.'
-[Professional Mode] Input: 'we gonna ship the cross platform desktop app asap' -> Output: 'We going to ship the cross platform desktop app as soon as possible.'
-[Bullets Mode] Generated:
-- First record voice
-- Second polish transcript
-- Third inject into active window
-All AI polishing modes passed successfully!
-
-[SUCCESS] All synthetic audio and speech pipeline verification tests passed!
-```
-
 ---
 
 ## 🔑 Supported Speech Providers
@@ -210,13 +206,14 @@ Configure your preferred STT provider in the in-app **Settings** modal or via `.
 
 ---
 
-## 🚀 GitHub Release & Distribution
+## 🚀 GitHub Actions Multi-Platform Release
 
 Automated multi-platform CI/CD workflows build and package cross-platform release binaries on every version tag:
 
 - **Windows**: `RDF-Flow_0.1.0_x64_en-US.msi`, `RDF-Flow.exe`
-- **macOS**: `RDF-Flow_0.1.0_aarch64.dmg` (Apple Silicon) & Intel
-- **Linux**: `rdf-flow_0.1.0_amd64.AppImage`, `rdf-flow_0.1.0_amd64.deb`
+- **macOS**: `RDF-Flow_0.1.0_universal.dmg`, `RDF-Flow.app`
+- **Android**: `RDF-Flow-v0.1.0.apk`
+- **iOS**: `RDF-Flow-v0.1.0-ios.zip`
 
 To trigger an automated release build:
 ```bash
